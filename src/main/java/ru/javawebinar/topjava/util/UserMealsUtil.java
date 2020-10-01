@@ -1,16 +1,13 @@
 package ru.javawebinar.topjava.util;
 
-import javafx.beans.binding.BooleanBinding;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.model.UserMealWithExcess;
 
-import javax.jws.soap.SOAPBinding;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class UserMealsUtil {
