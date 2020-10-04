@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface MealDao {
     List<Meal> getAllMeals();
-
     void deleteMeal(int id);
+    void addMeal(Meal meal);
 }

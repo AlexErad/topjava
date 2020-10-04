@@ -36,4 +36,9 @@ public class MealDaoHardcoded implements MealDao {
             }
         }
     }
+
+    @Override
+    public void addMeal(Meal meal) {
+
+    }
 }
