@@ -7,6 +7,7 @@ import ru.javawebinar.topjava.dao.MealDaoHardcoded;
 import ru.javawebinar.topjava.model.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,8 +31,15 @@ public class MealServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("redirect to users");
+        String forward = MEALS_JSP_PATH;
+        String action = request.getParameter("action");
+        if ("delete".equalsIgnoreCase(action)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            mealDao.deleteMeal(id);
+        }
         List<MealTo> mealsWithExcess = MealsUtil.filteredByStreams(mealDao.getAllMeals(), 2000);
         request.setAttribute("meals", mealsWithExcess);
-        request.getRequestDispatcher(MEALS_JSP_PATH).forward(request, response);
+        RequestDispatcher view = request.getRequestDispatcher(forward);
+        view.forward(request, response);
     }
 }

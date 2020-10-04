@@ -30,6 +30,8 @@
             <td style="color:${color}">${f:formatLocalDateTime(meal.getDateTime(), 'dd.MM.yy hh:mm:ss')}</td>
             <td style="color:${color}"><c:out value="${meal.getDescription()}"/></td>
             <td style="color:${color}"><c:out value="${meal.getCalories()}"/></td>
+            <td><a href="meals?action=update&id=<c:out value="${meal.getId()}"/>">Update</a> </td>
+            <td><a href="meals?action=delete&id=<c:out value="${meal.getId()}"/>">Delete</a> </td>
         </tr>
     </c:forEach>
     </tbody>
