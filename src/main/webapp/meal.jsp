@@ -6,7 +6,6 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page language="java" contentType="text/html; charset=EUC-KR" pageEncoding="EUC-KR" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://example.com/functions" prefix="f" %>
@@ -25,16 +24,18 @@
         $('input[name=dob]').datepicker();
     });
 </script>
-<form method="POST" action='meals.jsp' name="frmAddEditMeal">
+<form method="POST" action='meals' name="frmAddEditMeal">
+    <c:set var="id" scope="application" value="${meal.getId()}"></c:set>
     Date/Time : <input
-        type="text" name="dob"
-        value="${f:formatLocalDateTime(meal.getDateTime(), 'dd.MM.yy hh:mm:ss')}"/>"/>
+        type="text" name="dateTime"
+        value="${f:formatLocalDateTime(meal.getDateTime(), 'dd.MM.yyyy hh:mm:ss')}"/><br/>
     Description : <input
         type="text" name="description"
         value="<c:out value="${meal.getDescription()}" />"/> <br/>
-    Date Time : <input
-        type="text" name="dateTime"
-        value="<c:out value="${meal.getDateTime()}" />"/> <br/>
+    Calories : <input
+        type="text" name="calories"
+        value="<c:out value="${meal.getCalories()}" />"/> <br/>
+    <input type="submit" value="Submit"/>
 </form>
 </body>
 </html>

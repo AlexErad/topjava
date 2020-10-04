@@ -15,6 +15,10 @@
     <title>Title</title>
 </head>
 <body>
+<h3><a href="index.html">Home</a></h3>
+<hr>
+<h2>Meals</h2>
+<a href="meals?action=insert">Add Meal</a>
 <table border=1>
     <thead>
     <tr>
@@ -27,7 +31,7 @@
     <c:forEach items="${meals}" var="meal">
         <c:set var = "color" value="${meal.isExcess()?'red':'green'}"/>
         <tr>
-            <td style="color:${color}">${f:formatLocalDateTime(meal.getDateTime(), 'dd.MM.yy hh:mm:ss')}</td>
+            <td style="color:${color}">${f:formatLocalDateTime(meal.getDateTime(), 'dd.MM.yy HH:mm:ss')}</td>
             <td style="color:${color}"><c:out value="${meal.getDescription()}"/></td>
             <td style="color:${color}"><c:out value="${meal.getCalories()}"/></td>
             <td><a href="meals?action=update&id=<c:out value="${meal.getId()}"/>">Update</a> </td>
