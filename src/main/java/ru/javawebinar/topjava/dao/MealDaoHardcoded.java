@@ -4,15 +4,15 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MealDaoHardcoded implements MealDao {
     private List<Meal> testMeals;
     private static int count = 0;
 
     public MealDaoHardcoded() {
-        testMeals = new ArrayList<>();
+        testMeals = new CopyOnWriteArrayList<>();
         testMeals.add(new Meal(++count, LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500));
         testMeals.add(new Meal(++count, LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000));
         testMeals.add(new Meal(++count, LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500));
@@ -54,6 +54,13 @@ public class MealDaoHardcoded implements MealDao {
 
     @Override
     public void updateMeal(Meal meal) {
-
+        for (Meal storedMeal: testMeals) {
+            if (storedMeal.getId() == meal.getId()) {
+                storedMeal.setDateTime(meal.getDateTime());
+                storedMeal.setCalories(meal.getCalories());
+                storedMeal.setDescription(meal.getDescription());
+                break;
+            }
+        }
     }
 }

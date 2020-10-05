@@ -33,19 +33,20 @@ public class MealServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("POST request");
+        request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
         LocalDateTime dateTime = DateParser.parseStringToDate(request.getParameter("dateTime"), "dd.MM.yyyy HH:mm:ss");
         String desc = request.getParameter("description");
         int calories = Integer.parseInt(request.getParameter("calories"));
-        if (id==null || id.isEmpty()) {
-            Meal meal = new Meal();
-            meal.setCalories(calories);
-            meal.setDateTime(dateTime);
-            meal.setDescription(desc);
+        Meal meal = new Meal();
+        meal.setCalories(calories);
+        meal.setDateTime(dateTime);
+        meal.setDescription(desc);
+        if (id == null || id.isEmpty()) {
             mealDao.addMeal(meal);
-        }
-        else {
-            throw new UnsupportedOperationException("Update is not supported yet");
+        } else {
+            meal.setId(Integer.parseInt(id));
+            mealDao.updateMeal(meal);
         }
         List<MealTo> mealsWithExcess = MealsUtil.filteredByStreams(mealDao.getAllMeals(), 2000);
         request.setAttribute("meals", mealsWithExcess);
@@ -55,24 +56,26 @@ public class MealServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("GET request");
-        String forward = LIST_MEALS_JSP_PATH;
+        String forward = "";
         String action = request.getParameter("action");
         if ("delete".equalsIgnoreCase(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             mealDao.deleteMeal(id);
             forward = LIST_MEALS_JSP_PATH;
-        }
-        else if ("update".equalsIgnoreCase(action)) {
+            List<MealTo> mealsWithExcess = MealsUtil.filteredByStreams(mealDao.getAllMeals(), 2000);
+            request.setAttribute("meals", mealsWithExcess);
+        } else if ("update".equalsIgnoreCase(action)) {
             int id = Integer.parseInt(request.getParameter("id"));
             Meal mealToUpdate = mealDao.getMeal(id);
             request.setAttribute("meal", mealToUpdate);
             forward = ADD_EDIT_MEAL_JSP_PATH;
-        }
-        else if ("insert".equalsIgnoreCase(action)) {
+        } else if ("insert".equalsIgnoreCase(action)) {
             forward = ADD_EDIT_MEAL_JSP_PATH;
+        } else {
+            forward = LIST_MEALS_JSP_PATH;
+            List<MealTo> mealsWithExcess = MealsUtil.filteredByStreams(mealDao.getAllMeals(), 2000);
+            request.setAttribute("meals", mealsWithExcess);
         }
-        List<MealTo> mealsWithExcess = MealsUtil.filteredByStreams(mealDao.getAllMeals(), 2000);
-        request.setAttribute("meals", mealsWithExcess);
         RequestDispatcher view = request.getRequestDispatcher(forward);
         view.forward(request, response);
     }
