@@ -6,10 +6,8 @@ import ru.javawebinar.topjava.dao.MealDao;
 import ru.javawebinar.topjava.dao.MealDaoHardcoded;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.util.DateFormatter;
 import ru.javawebinar.topjava.util.DateParser;
 import ru.javawebinar.topjava.util.MealsUtil;
-import ru.javawebinar.topjava.util.TimeUtil;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -50,33 +48,45 @@ public class MealServlet extends HttpServlet {
         }
         List<MealTo> mealsWithExcess = MealsUtil.filteredByStreams(mealDao.getAllMeals(), 2000);
         request.setAttribute("meals", mealsWithExcess);
-        RequestDispatcher view = request.getRequestDispatcher(LIST_MEALS_JSP_PATH);
+        RequestDispatcher view = request.getRequestDispatcher("meals.jsp");
         view.forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("GET request");
-        String forward = "";
         String action = request.getParameter("action");
-        if ("delete".equalsIgnoreCase(action)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            mealDao.deleteMeal(id);
-            forward = LIST_MEALS_JSP_PATH;
-            List<MealTo> mealsWithExcess = MealsUtil.filteredByStreams(mealDao.getAllMeals(), 2000);
-            request.setAttribute("meals", mealsWithExcess);
-        } else if ("update".equalsIgnoreCase(action)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            Meal mealToUpdate = mealDao.getMeal(id);
-            request.setAttribute("meal", mealToUpdate);
-            forward = ADD_EDIT_MEAL_JSP_PATH;
-        } else if ("insert".equalsIgnoreCase(action)) {
-            forward = ADD_EDIT_MEAL_JSP_PATH;
-        } else {
-            forward = LIST_MEALS_JSP_PATH;
-            List<MealTo> mealsWithExcess = MealsUtil.filteredByStreams(mealDao.getAllMeals(), 2000);
-            request.setAttribute("meals", mealsWithExcess);
-        }
-        RequestDispatcher view = request.getRequestDispatcher(forward);
+        if ("delete".equals(action))
+            performDelete(request, response);
+        else if ("update".equals(action))
+            initiateUpdate(request, response);
+        else if ("insert".equals(action))
+            initiateInsert(request, response);
+        else listMeals(request, response);
+    }
+
+    private void listMeals(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<MealTo> mealsWithExcess = MealsUtil.filteredByStreams(mealDao.getAllMeals(), 2000);
+        request.setAttribute("meals", mealsWithExcess);
+        RequestDispatcher view = request.getRequestDispatcher("/meals.jsp");
         view.forward(request, response);
+    }
+
+    private void initiateInsert(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        RequestDispatcher view = request.getRequestDispatcher("/meal.jsp");
+        view.forward(request, response);
+    }
+
+    private void initiateUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Meal mealToUpdate = mealDao.getMeal(id);
+        request.setAttribute("meal", mealToUpdate);
+        request.getRequestDispatcher("/meal.jsp").forward(request, response);
+    }
+
+    private void performDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        mealDao.deleteMeal(id);
+        List<MealTo> mealsWithExcess = MealsUtil.filteredByStreams(mealDao.getAllMeals(), 2000);
+        response.sendRedirect("meals");
     }
 }
