@@ -18,6 +18,7 @@
 </head>
 <body>
 
+<jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"></jsp:useBean>
 <form method="POST" action='meals' name="frmAddEditMeal">
     <input type="hidden" readonly="readonly" name="id"
            value="<c:out value="${meal.id}" />"/> <br/>
