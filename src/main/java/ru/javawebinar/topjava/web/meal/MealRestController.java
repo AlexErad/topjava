@@ -5,9 +5,11 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
-import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.util.List;
+
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserCaloriesPerDay;
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 @Controller
 public class MealRestController {
@@ -18,11 +20,11 @@ public class MealRestController {
     }
 
     public void delete(int id) {
-        service.delete(id, SecurityUtil.authUserId());
+        service.delete(id, authUserId());
     }
 
     public List<MealTo> getAll() {
-        return MealsUtil.getTos(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+        return MealsUtil.getTos(service.getAll(authUserId()), authUserCaloriesPerDay());
     }
 
     public void save(Meal meal) {
