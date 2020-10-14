@@ -49,6 +49,20 @@
             </tr>
         </c:forEach>
     </table>
+    <br>
+    <form id="filter" method="get">
+        <label for="dateFrom">From date</label>
+        <input type="date" name="dateFrom" id="dateFrom"/>
+        <label for="dateTo">To date</label>
+        <input type="date" name="dateTo" id="dateTo"/>
+        <br>
+        <label for="timeFrom">From time</label>
+        <input type="time" name="timeFrom" id="timeFrom"/>
+        <label for="timeTo">To time</label>
+        <input type="time" name="timeTo" id="timeTo"/>
+        <br>
+        <button type="submit">Filter</button>
+    </form>
 </section>
 </body>
 </html>

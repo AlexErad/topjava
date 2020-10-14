@@ -6,6 +6,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletConfig;
@@ -14,7 +15,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
@@ -70,7 +73,15 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
-                List<MealTo> meals = restController.getAll();
+                List<MealTo> meals;
+                if (request.getParameter("dateFrom") != null || request.getParameter("dateTo") != null
+                        || request.getParameter("timeFrom") != null || request.getParameter("timeTo") != null) {
+                    meals = restController.getAll(DateTimeUtil.toDate(request.getParameter("dateFrom")).orElse(LocalDate.MIN),
+                            DateTimeUtil.toDate(request.getParameter("dateTo")).orElse(LocalDate.MAX),
+                            DateTimeUtil.toTime(request.getParameter("timeFrom")).orElse(LocalTime.MIN),
+                            DateTimeUtil.toTime(request.getParameter("timeTo")).orElse(LocalTime.MAX));
+                } else
+                    meals = restController.getAll();
                 request.setAttribute("meals", meals);
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
