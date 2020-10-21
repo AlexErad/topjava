@@ -10,6 +10,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.List;
@@ -51,7 +52,10 @@ public class MealServiceTest {
 
     @Test
     public void getBetweenInclusive() {
-        throw new RuntimeException();
+        List<Meal> actualMeals = service.getBetweenInclusive(DateTimeUtil.parseLocalDate("2020-01-31"),
+                DateTimeUtil.parseLocalDate("2020-01-31"), USER_ID);
+        Assertions.assertThat(actualMeals).containsOnly(MEAL_2);
+
     }
 
     @Test

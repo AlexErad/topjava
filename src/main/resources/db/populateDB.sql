@@ -16,6 +16,6 @@ VALUES ('USER', 100000),
        ('ADMIN', 100001);
 
 INSERT INTO meals (description, calories, datetime, user_id)
-VALUES ('Breakfast', 400, '2020-01-31 09:00', 100000),
+VALUES ('Breakfast', 400, '2020-01-30 09:00', 100000),
        ('Dinner', 500, '2020-01-31 13:00', 100000),
        ('Admin_Dinner', 500, '2020-01-31 13:00', 100001)
