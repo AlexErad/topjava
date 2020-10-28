@@ -1,19 +1,41 @@
 package ru.javawebinar.topjava.model;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import org.hibernate.validator.constraints.Range;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@NamedQueries({
+        @NamedQuery(name = Meal.GET_ALL, query = "SELECT m FROM Meal m WHERE m.user.id=:user_id ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.GET_MEAL, query = "SELECT m FROM Meal m WHERE m.id=:id AND m.user.id=:user_id"),
+        @NamedQuery(name = Meal.GET_MEALS_FOR_DATES, query = "SELECT m FROM Meal m WHERE m.user.id=:user_id" +
+                " AND m.dateTime>:startDate AND m.dateTime<:endDate ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.DELETE_MEAL, query = "DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:user_id")
+})
+@Entity
+@Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meals_unique_user_datetime_idx")})
 public class Meal extends AbstractBaseEntity {
+    public static final String GET_ALL = "Meal.GetAll";
+    public static final String GET_MEAL = "Meal.GetMeal";
+    public static final String DELETE_MEAL = "Meal.Delete";
+    public static final String GET_MEALS_FOR_DATES = "Meal.GetMealsBetweenDates";
+
+    @Column(name = "date_time", columnDefinition = "TIMESTAMP")
     private LocalDateTime dateTime;
 
+    @NotBlank
+    @Column(name = "description")
     private String description;
 
+    @Column(name = "calories")
+    @Range(min = 10, max = 1000)
     private int calories;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
     private User user;
 
     public Meal() {
