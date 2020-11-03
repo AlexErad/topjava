@@ -4,6 +4,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import java.time.LocalDateTime;
@@ -24,8 +25,13 @@ public class DataJpaMealRepository implements MealRepository {
     }
 
     @Override
+    @Transactional
     public Meal save(Meal meal, int userId) {
-        return null;
+        User user = crudUserRepository.getOne(userId);
+        meal.setUser(user);
+        if (meal.getId() != null && get(meal.getId(), userId) == null)
+            return null;
+        return crudRepository.save(meal);
     }
 
     @Override
